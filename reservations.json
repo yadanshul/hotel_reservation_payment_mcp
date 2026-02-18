@@ -1,0 +1,49 @@
+[
+  {
+    "reservation_number": "10001",
+    "guest_name": "Alex Morgan",
+    "room_type": "Deluxe King",
+    "nights": 2,
+    "has_breakfast": true,
+    "total_paid": 320,
+    "last_payment_id": "H2X-265215000",
+    "last_amendment": {
+      "type": "add_breakfast",
+      "amount": 17,
+      "currency": "GBP",
+      "quote_id": "q_45fd73b4ff",
+      "timestamp": 1768703384
+    }
+  },
+  {
+    "reservation_number": "10003",
+    "guest_name": "Colin Savalle",
+    "room_type": "Deluxe King",
+    "nights": 2,
+    "has_breakfast": true,
+    "last_payment_id": "H2X-268853000",
+    "last_amendment": {
+      "type": "add_breakfast",
+      "amount": 52,
+      "currency": "GBP",
+      "quote_id": "q_5169954992",
+      "timestamp": 1770032088
+    }
+  },
+  {
+    "reservation_number": "10002",
+    "guest_name": "Sam Lee",
+    "room_type": "Standard Queen",
+    "nights": 1,
+    "has_breakfast": true,
+    "total_paid": 140,
+    "last_payment_id": "H2X-267178000",
+    "last_amendment": {
+      "type": "add_breakfast",
+      "amount": 48,
+      "currency": "GBP",
+      "quote_id": "q_c268cc5174",
+      "timestamp": 1769425463
+    }
+  }
+]

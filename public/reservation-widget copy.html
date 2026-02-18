@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Hotel Reservations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            color: #0b0b0f;
+            --bg: #f6f8fb;
+            --card: #ffffff;
+            --muted: #64748b;
+            --line: #e7ecf5;
+            --brand: #111bf5;
+            --brand2: #0b0b0f;
+            --good: #16a34a;
+            --warn: #b45309;
+            --bad: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            padding: 16px;
+        }
+
+        .app {
+            max-width: 920px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #fff;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--brand);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        header strong {
+            font-size: 1rem;
+        }
+
+        .pill {
+            background: #f2f4fb;
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: #334155;
+            font-size: 0.85rem;
+        }
+
+        .content {
+            padding: 16px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .card h3 {
+            margin: 0;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.95rem;
+        }
+
+        .card .body {
+            padding: 14px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #cad3e0;
+            font-size: 0.95rem;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--brand);
+            color: white;
+        }
+
+        button.secondary {
+            background: #e9edf6;
+            color: var(--brand2);
+        }
+
+        button.ghost {
+            background: transparent;
+            color: var(--brand2);
+            border: 1px solid var(--line);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 8px 12px;
+        }
+
+        .k {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .v {
+            font-weight: 650;
+        }
+
+        .steps {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .step.active {
+            border-color: rgba(17, 27, 245, 0.35);
+            background: rgba(17, 27, 245, 0.08);
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 18px;
+            background: #0b0b0f;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+            display: none;
+            max-width: 90vw;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .price {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 12px 12px;
+            border-radius: 12px;
+            background: #f2f4fb;
+            border: 1px solid var(--line);
+        }
+
+        .price strong {
+            font-size: 1.1rem;
+        }
+
+        code {
+            background: rgba(15, 23, 42, 0.06);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <div class="brand">
+                <div class="logo">H</div>
+                <div>
+                    <strong>Hotel Reservations</strong>
+                    <div class="hint">Find and amend your booking</div>
+                </div>
+            </div>
+            <div id="statusPill" class="pill">Idle</div>
+        </header>
+
+        <div class="content">
+            <div class="steps">
+                <div id="s1" class="step active">1. Find reservation</div>
+                <div id="s2" class="step">2. Review details</div>
+                <div id="s3" class="step">3. Amend & pay</div>
+            </div>
+
+            <div class="grid">
+                <!-- Left: main flow -->
+                <div class="card">
+                    <h3>Reservation</h3>
+                    <div class="body" id="main">
+                        <!-- Step 1 -->
+                        <div id="stepFind">
+                            <div class="hint">Enter your reservation number (e.g. <code>R-10001</code> or
+                                <code>10002</code>)
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <input id="resInput" type="text" placeholder="Reservation number" />
+                                <button id="lookupBtn">Lookup</button>
+                            </div>
+                            <div class="hint" style="margin-top:8px;">Tip: Paste the number from your confirmation
+                                email.</div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div id="stepReview" style="display:none;">
+                            <div class="kv" id="reservationKv"></div>
+                            <div class="row" style="margin-top:6px;">
+                                <button id="amendBtn">Amend reservation</button>
+                                <button id="newSearchBtn" class="ghost">New search</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div id="stepAmend" style="display:none;">
+                            <div class="hint">Choose what you want to add</div>
+
+                            <div class="card" style="border-radius:12px;">
+                                <h3 style="border-bottom:1px solid var(--line);">Add-ons</h3>
+                                <div class="body">
+                                    <div class="row" style="justify-content: space-between;">
+                                        <div>
+                                            <div style="font-weight:800;">Breakfast</div>
+                                            <div class="hint">Daily breakfast during your stay</div>
+                                        </div>
+                                        <button id="quoteBreakfastBtn" class="secondary">Get price</button>
+                                    </div>
+
+                                    <div id="quoteBox" style="display:none;">
+                                        <div class="price">
+                                            <div>
+                                                <div class="hint">Breakfast add-on</div>
+                                                <strong id="quoteAmount">£--</strong>
+                                            </div>
+                                            <div class="hint">Quote ID: <code id="quoteId">—</code></div>
+                                        </div>
+
+                                        <div class="row" style="margin-top:10px;">
+                                            <button id="confirmPayBtn">Confirm & Pay</button>
+                                            <button id="cancelQuoteBtn" class="secondary">Cancel</button>
+                                        </div>
+
+                                        <div class="hint" style="margin-top:8px;">
+                                            You’ll be charged the amount shown above.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:10px;">
+                                <button id="backBtn" class="ghost">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: summary / receipt -->
+                <div class="card">
+                    <h3>Summary</h3>
+                    <div class="body">
+                        <div class="hint">Current reservation</div>
+                        <div id="summary" class="hint">No reservation loaded yet.</div>
+                        <div style="height:8px;"></div>
+                        <div class="hint">Latest activity</div>
+                        <div id="activity" class="hint">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        const statusPill = document.getElementById("statusPill");
+        const toast = document.getElementById("toast");
+
+        const s1 = document.getElementById("s1");
+        const s2 = document.getElementById("s2");
+        const s3 = document.getElementById("s3");
+
+        const stepFind = document.getElementById("stepFind");
+        const stepReview = document.getElementById("stepReview");
+        const stepAmend = document.getElementById("stepAmend");
+
+        const resInput = document.getElementById("resInput");
+        const lookupBtn = document.getElementById("lookupBtn");
+
+        const reservationKv = document.getElementById("reservationKv");
+        const amendBtn = document.getElementById("amendBtn");
+        const newSearchBtn = document.getElementById("newSearchBtn");
+
+        const quoteBreakfastBtn = document.getElementById("quoteBreakfastBtn");
+        const quoteBox = document.getElementById("quoteBox");
+        const quoteAmount = document.getElementById("quoteAmount");
+        const quoteId = document.getElementById("quoteId");
+        const confirmPayBtn = document.getElementById("confirmPayBtn");
+        const cancelQuoteBtn = document.getElementById("cancelQuoteBtn");
+        const backBtn = document.getElementById("backBtn");
+
+        const summaryEl = document.getElementById("summary");
+        const activityEl = document.getElementById("activity");
+
+        const state = {
+            reservation: null,
+            quote: null
+        };
+
+        function setStatus(t) {
+            statusPill.textContent = t;
+        }
+
+        function showToast(text) {
+            toast.textContent = text;
+            toast.style.display = "block";
+            setTimeout(() => (toast.style.display = "none"), 2600);
+        }
+
+        function setStep(step) {
+            s1.classList.toggle("active", step === 1);
+            s2.classList.toggle("active", step === 2);
+            s3.classList.toggle("active", step === 3);
+
+            stepFind.style.display = step === 1 ? "block" : "none";
+            stepReview.style.display = step === 2 ? "block" : "none";
+            stepAmend.style.display = step === 3 ? "block" : "none";
+        }
+
+        // function renderReservation(r) {
+        //     reservationKv.innerHTML = "";
+        //     const rows = [
+        //         ["Reservation", r.reservation_number],
+        //         ["Guest", r.guest_name],
+        //         ["Room", r.room_type],
+        //         ["Nights", String(r.nights)],
+        //         ["Breakfast", r.has_breakfast ? "Yes" : "No"],
+        //         ["Total paid", String(r.total_paid)],
+        //     ];
+        //     for (const [k, v] of rows) {
+        //         const kEl = document.createElement("div");
+        //         kEl.className = "k";
+        //         kEl.textContent = k;
+        //         const vEl = document.createElement("div");
+        //         vEl.className = "v";
+        //         vEl.textContent = v;
+        //         reservationKv.appendChild(kEl);
+        //         reservationKv.appendChild(vEl);
+        //     }
+
+        //     summaryEl.textContent =
+        //         `${r.reservation_number} • ${r.guest_name} • ${r.room_type} • ${r.nights} night(s) • Breakfast: ${r.has_breakfast ? "Yes" : "No"}`;
+        // }
+
+
+        function renderReservation(r) {
+            // Inject modern styles once
+            if (!document.getElementById("reservationModernStyles")) {
+                const style = document.createElement("style");
+                style.id = "reservationModernStyles";
+                style.textContent = `
+            .res-head{
+                display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+                padding:12px; border:1px solid var(--line); border-radius:14px;
+                background: linear-gradient(135deg, rgba(17,27,245,.10), rgba(255,255,255,1));
+            }
+            .res-title{ display:grid; gap:4px; }
+            .res-title .id{ font-weight:900; font-size:1.05rem; letter-spacing:.2px; }
+            .res-title .sub{ color:var(--muted); font-size:.9rem; }
+            .badge{
+                display:inline-flex; align-items:center; gap:8px;
+                padding:8px 10px; border-radius:999px;
+                border:1px solid var(--line);
+                background:#fff;
+                font-weight:800; font-size:.85rem;
+            }
+            .dot{ width:8px; height:8px; border-radius:999px; background: var(--muted); }
+            .dot.good{ background: var(--good); }
+            .dot.warn{ background: var(--warn); }
+            .dot.bad{ background: var(--bad); }
+
+            .chips{
+                display:flex; flex-wrap:wrap; gap:10px;
+                padding:10px 0 0;
+            }
+            .chip{
+                display:grid; gap:2px;
+                padding:10px 12px; border-radius:14px;
+                border:1px solid var(--line);
+                background:#fff;
+                min-width: 180px;
+            }
+            .chip .k{ margin:0; color:var(--muted); font-size:.82rem; }
+            .chip .v{ margin:0; font-weight:900; font-size:.98rem; color: #0b0b0f; }
+            .chip.emph{
+                background: rgba(17,27,245,.06);
+                border-color: rgba(17,27,245,.18);
+            }
+            .chip.good{
+                background: rgba(22,163,74,.08);
+                border-color: rgba(22,163,74,.20);
+            }
+            .chip.warn{
+                background: rgba(180,83,9,.08);
+                border-color: rgba(180,83,9,.20);
+            }
+            .muted{ color: var(--muted); }
+            `;
+                document.head.appendChild(style);
+            }
+
+            // Helpers
+            const moneyGBP = (v) =>
+                typeof v === "number" ? `£${v.toLocaleString("en-GB")}` : "—";
+            const safe = (v, fallback = "—") =>
+                v === undefined || v === null || v === "" ? fallback : String(v);
+
+            // Compute a simple “status” label and colour (customize as you like)
+            const hasBreakfast = typeof r.has_breakfast === "boolean" ? r.has_breakfast : null;
+            const statusLabel = hasBreakfast === null ? "Loaded" : (hasBreakfast ? "Breakfast included" : "Breakfast not included");
+            const statusDotClass = hasBreakfast === null ? "" : (hasBreakfast ? "good" : "warn");
+
+            // Clear & rebuild
+            reservationKv.innerHTML = "";
+
+            // Header block
+            const head = document.createElement("div");
+            head.className = "res-head";
+
+            const title = document.createElement("div");
+            title.className = "res-title";
+            title.innerHTML = `
+            <div class="id">${safe(r.reservation_number, "Reservation")}</div>
+            <div class="sub">${safe(r.guest_name, "Guest")} • ${safe(r.room_type, "Room")}</div>
+        `;
+
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            badge.innerHTML = `<span class="dot ${statusDotClass}"></span>${statusLabel}`;
+
+            head.appendChild(title);
+            head.appendChild(badge);
+
+            // Chips block
+            const chips = document.createElement("div");
+            chips.className = "chips";
+
+            function chip(label, value, variant = "") {
+                const el = document.createElement("div");
+                el.className = `chip ${variant}`.trim();
+                el.innerHTML = `<div class="k">${label}</div><div class="v">${value}</div>`;
+                return el;
+            }
+
+            // Build chips (pick what you want to show)
+            chips.appendChild(chip("Guest Name", safe(r.guest_name), "emph"));
+            chips.appendChild(chip("Room", safe(r.room_type)));
+            chips.appendChild(
+                chip("Nights", typeof r.nights === "number" ? String(r.nights) : safe(r.nights))
+            );
+
+            if (hasBreakfast !== null) {
+                chips.appendChild(
+                    chip("Breakfast", hasBreakfast ? "Yes" : "No", hasBreakfast ? "good" : "warn")
+                );
+            }
+
+            chips.appendChild(chip("Total paid", moneyGBP(r.total_paid), "emph"));
+
+            if (r.last_amendment) {
+                const la = r.last_amendment;
+                const txt = `${safe(la.type)} • ${moneyGBP(la.amount)} ${safe(la.currency, "")}`.trim();
+                chips.appendChild(chip("Last change", txt));
+            }
+
+            // Mount to the existing kv container (it’s just a div; we can put anything in it)
+            reservationKv.appendChild(head);
+            reservationKv.appendChild(chips);
+
+            // Summary line (resilient)
+            const parts = [];
+            if (r.reservation_number) parts.push(r.reservation_number);
+            if (r.guest_name) parts.push(r.guest_name);
+            if (r.room_type) parts.push(r.room_type);
+            if (typeof r.nights === "number") parts.push(`${r.nights} night(s)`);
+            if (hasBreakfast !== null) parts.push(`Breakfast: ${hasBreakfast ? "Yes" : "No"}`);
+
+            summaryEl.textContent = parts.join(" • ") || "Reservation loaded.";
+        }
+
+
+        function clearQuoteUI() {
+            state.quote = null;
+            quoteBox.style.display = "none";
+            quoteAmount.textContent = "£--";
+            quoteId.textContent = "—";
+        }
+
+        function applyServerState(sc) {
+            if (sc.reservation) {
+                state.reservation = sc.reservation;
+                clearQuoteUI();
+                renderReservation(state.reservation);
+                activityEl.textContent = sc.message || "Reservation loaded.";
+                setStep(2);
+            }
+            if (sc.quote) {
+                state.quote = sc.quote;
+                quoteAmount.textContent = `£${sc.quote.amount}`;
+                quoteId.textContent = sc.quote.quote_id;
+                quoteBox.style.display = "block";
+                activityEl.textContent = sc.message || "Quote ready.";
+            }
+            if (sc.updated_reservation) {
+                state.reservation = sc.updated_reservation;
+                clearQuoteUI();
+                renderReservation(state.reservation);
+                activityEl.textContent = sc.message || "Reservation updated.";
+                showToast("Success! Reservation updated.");
+                setStep(2);
+            }
+            if (sc.message && !sc.reservation && !sc.quote && !sc.updated_reservation) {
+                activityEl.textContent = sc.message;
+            }
+        }
+
+        async function callTool(name, payload) {
+            setStatus("Working…");
+            lookupBtn.disabled = true;
+            quoteBreakfastBtn.disabled = true;
+            confirmPayBtn.disabled = true;
+
+            try {
+                const resp = await window.openai.callTool(name, payload);
+                if (resp?.structuredContent) applyServerState(resp.structuredContent);
+                return resp;
+            } catch (e) {
+                console.error(e);
+                showToast("Something went wrong.");
+            } finally {
+                lookupBtn.disabled = false;
+                quoteBreakfastBtn.disabled = false;
+                confirmPayBtn.disabled = false;
+                setStatus("Idle");
+            }
+        }
+
+        // UI events
+        lookupBtn.addEventListener("click", async () => {
+            const rn = resInput.value.trim();
+            if (!rn) return showToast("Enter a reservation number.");
+            await callTool("lookup_reservation", { reservation_number: rn });
+        });
+
+        resInput.addEventListener("keydown", async (e) => {
+            if (e.key === "Enter") lookupBtn.click();
+        });
+
+        amendBtn.addEventListener("click", () => {
+            if (!state.reservation) return;
+            setStep(3);
+        });
+
+        newSearchBtn.addEventListener("click", () => {
+            state.reservation = null;
+            clearQuoteUI();
+            reservationKv.innerHTML = "";
+            summaryEl.textContent = "No reservation loaded yet.";
+            activityEl.textContent = "—";
+            resInput.value = "";
+            setStep(1);
+        });
+
+        backBtn.addEventListener("click", () => {
+            setStep(2);
+        });
+
+        quoteBreakfastBtn.addEventListener("click", async () => {
+            if (!state.reservation) return showToast("Load a reservation first.");
+            if (state.reservation.has_breakfast) {
+                return showToast("Breakfast is already included.");
+            }
+            await callTool("quote_add_breakfast", { reservation_number: state.reservation.reservation_number });
+        });
+
+        cancelQuoteBtn.addEventListener("click", () => {
+            clearQuoteUI();
+            showToast("Cancelled.");
+        });
+
+        confirmPayBtn.addEventListener("click", async () => {
+            if (!state.reservation || !state.quote) return showToast("Get a price first.");
+            await callTool("confirm_add_breakfast", {
+                reservation_number: state.reservation.reservation_number,
+                quote_id: state.quote.quote_id
+            });
+        });
+
+        // If ChatGPT injects toolOutput, apply it
+        window.addEventListener("openai:set_globals", (event) => {
+            const globals = event.detail?.globals;
+            const toolOutput = globals?.toolOutput;
+            if (toolOutput) applyServerState(toolOutput);
+        }, { passive: true });
+
+        // boot
+        setStep(1);
+        setStatus("Idle");
+    </script>
+</body>
+
+</html>
