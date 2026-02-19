@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 from typing import Any, Dict, List, Optional, Tuple
 
 from mcp.server.fastmcp import FastMCP
+import sys
+
+print("Tool invoked", file=sys.stderr)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESERVATIONS_PATH = os.path.join(BASE_DIR, "reservations.json")
@@ -23,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 mcp = FastMCP(
     "hotel-reservation-app",
-    stateless_http=True,
-    json_response=True,
+    # stateless_http=True,
+    # json_response=True,
 )
 
 UI_URI = "ui://widget/reservation-anshul.html"
@@ -461,15 +464,16 @@ def confirm_add_breakfast(reservation_number: str, quote_id: str) -> Dict[str, A
     )
 
 
-app = mcp.streamable_http_app()
+# app = mcp.streamable_http_app()
 
 # Use your proven ngrok configuration (host header) on Windows.
 # Run: python server.py
 # Then: ngrok http --host-header=localhost:8000 8000
 if __name__ == "__main__":
-    import uvicorn
+    mcp.run()
+    # import uvicorn
 
-    uvicorn.run("server:app", host="0.0.0.0", port=8000)
+    # uvicorn.run("server:app", host="0.0.0.0", port=8000)
 
     # uvicorn.run(
     #     mcp.streamable_http_app(),
